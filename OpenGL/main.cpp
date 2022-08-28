@@ -1,25 +1,17 @@
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 #include <gl\glew.h>
 #include <GLFW\glfw3.h>
+#include "API/VertexBuffer.h"
+#include "API/VertexArray.h"
+#include "res/shaders/ShadersManeger.h"
+#include "res/vendor/stb_image.h"
 
+#define STB_IMAGE_IMPLEMENTATION
 #define WIDTH 860
 #define HEIGHT 640
-
-char windowName[] = "Portal";
-
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\n\0";
 
 void initTest()
 {
@@ -75,57 +67,46 @@ int main(int argc, char* argv[])
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	
+
+	char windowName[] = "Portal";
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, windowName, NULL, NULL);
 	glfwMakeContextCurrent(window);
 
 	float vertices[] = {
-		0.5f,  0.5f, 0.0f,  // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left 
+		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // top right and color
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom right and color
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left and color
+		-0.5f,  0.5f ,0.0f, 1.0f, 0.0f, 0.0f  // top left and color
 	};
 
 	int indices[] = {
-		0,1,3,
-		1,2,3
+		3,0,2,
+		0,1,2
 	};
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glewInit();
 
-	unsigned int vertexArray;
-	glGenVertexArrays(1, &vertexArray);
-	glBindVertexArray(vertexArray);
-
-	unsigned int vertexBuffer;
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	VertexArray vertexArrayObject;
+	VertexBuffer vertexBufferObject(sizeof(vertices), vertices);
 
 	unsigned int elementBuffer;
 	glGenBuffers(1, &elementBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
-	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
+	std::string filePath = "res/shaders/shaders.shader";
+	ShaderManeger shaderManeger;
+	ShaderSources shaderSources = shaderManeger.ParseShaders(filePath);
+	unsigned int shaderProgram = shaderManeger.CreateShader(shaderSources.vertexSource, shaderSources.fragmentSource);
 
-	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
+	glUseProgram(shaderProgram);
 
-	unsigned int shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-	
 	while (!glfwWindowShouldClose(window))
 	{
 		handleInput(window);
@@ -133,18 +114,14 @@ int main(int argc, char* argv[])
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(shaderProgram);
-		glBindVertexArray(vertexArray);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-	glDeleteVertexArrays(1, &vertexArray);
-	glDeleteBuffers(1, &vertexBuffer);
+	vertexArrayObject.~VertexArray();
+	vertexBufferObject.~VertexBuffer();
 	glDeleteBuffers(1, &elementBuffer);
-	glDeleteProgram(shaderProgram);
 	glfwTerminate();
 	return 0;
 }
