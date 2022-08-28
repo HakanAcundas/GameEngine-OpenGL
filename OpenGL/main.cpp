@@ -7,7 +7,8 @@
 #include "API/VertexBuffer.h"
 #include "API/VertexArray.h"
 #include "res/shaders/ShadersManeger.h"
-#include "res/vendor/stb_image.h"
+#include "res/vendor/stb_image/stb_image.h"
+#include "API/TextureManager.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #define WIDTH 860
@@ -73,10 +74,17 @@ int main(int argc, char* argv[])
 	glfwMakeContextCurrent(window);
 
 	float vertices[] = {
-		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // top right and color
-		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom right and color
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left and color
-		-0.5f,  0.5f ,0.0f, 1.0f, 0.0f, 0.0f  // top left and color
+		//positions				//colors			//texture coordinates
+		 0.5f,  0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	1.0f, 1.0f,  // top right
+		 0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	1.0f, 0.0f, // bottom right
+		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f, 1.0f,	0.0f, 0.0f, // bottom left
+		-0.5f,  0.5f ,0.0f,		1.0f, 1.0f, 0.0f,	0.0f, 1.0f // top left
+	};
+
+	float texCoords[] = {
+	0.0f, 0.0f,  // lower-left corner  
+	1.0f, 0.0f,  // lower-right corner
+	0.5f, 1.0f   // top-center corner
 	};
 
 	int indices[] = {
@@ -95,15 +103,23 @@ int main(int argc, char* argv[])
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	std::string filePath = "res/shaders/shaders.shader";
 	ShaderManeger shaderManeger;
 	ShaderSources shaderSources = shaderManeger.ParseShaders(filePath);
 	unsigned int shaderProgram = shaderManeger.CreateShader(shaderSources.vertexSource, shaderSources.fragmentSource);
+
+	TextureManager texture;
+	std::string imagePath = "res/textures/wall.jpg";
+	int width, height, nrChannels;
+	texture.LoadTexture(imagePath, width, height, nrChannels);
+	texture.FreeImageData();
 
 	glUseProgram(shaderProgram);
 
@@ -122,6 +138,7 @@ int main(int argc, char* argv[])
 	vertexArrayObject.~VertexArray();
 	vertexBufferObject.~VertexBuffer();
 	glDeleteBuffers(1, &elementBuffer);
+	texture.~TextureManager();
 	glfwTerminate();
 	return 0;
 }

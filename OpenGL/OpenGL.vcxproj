@@ -153,19 +153,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="API\TextureManager.cpp" />
     <ClCompile Include="API\VertexArray.cpp" />
     <ClCompile Include="API\VertexBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="res\shaders\ShadersManeger.cpp" />
+    <ClCompile Include="res\vendor\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\shaders.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="API\TextureManager.h" />
     <ClInclude Include="API\VertexArray.h" />
     <ClInclude Include="API\VertexBuffer.h" />
     <ClInclude Include="res\shaders\ShadersManeger.h" />
-    <ClInclude Include="res\vendor\stb_image.h" />
+    <ClInclude Include="res\vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\wall.jpg" />
