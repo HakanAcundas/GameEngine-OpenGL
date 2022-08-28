@@ -33,8 +33,13 @@ void TextureManager::LoadTexture(std::string& imagePath, int width, int height, 
 	}
 	else
 	{
-		std::cout << "Failed to load texture" << std::endl;
+		std::cout << "Failed to load texture!" << std::endl;
 	}
+}
+
+void TextureManager::TextureFlipVertically()
+{
+	stbi_set_flip_vertically_on_load(true);
 }
 
 void TextureManager::FreeImageData() const

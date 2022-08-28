@@ -58,5 +58,8 @@
     <Image Include="res\textures\wall.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\textures\ATAM.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

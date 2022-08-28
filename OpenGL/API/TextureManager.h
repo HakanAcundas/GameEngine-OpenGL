@@ -15,6 +15,7 @@ public:
 	void FreeImageData() const;
 
 	void LoadTexture(std::string& imagePath, int width, int height, int nrChannels);
+	void TextureFlipVertically();
 private:
 	unsigned int m_TextureID;
 	unsigned char* m_TextureData;

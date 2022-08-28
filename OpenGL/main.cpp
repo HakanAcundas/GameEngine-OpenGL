@@ -116,9 +116,10 @@ int main(int argc, char* argv[])
 	unsigned int shaderProgram = shaderManeger.CreateShader(shaderSources.vertexSource, shaderSources.fragmentSource);
 
 	TextureManager texture;
-	std::string imagePath = "res/textures/wall.jpg";
+	std::string imagePath = "res/textures/ATAM.jpg";
 	int width, height, nrChannels;
-	texture.LoadTexture(imagePath, width, height, nrChannels);
+	texture.TextureFlipVertically();
+	texture.LoadTexture(imagePath, 500, 500, 3);
 	texture.FreeImageData();
 
 	glUseProgram(shaderProgram);

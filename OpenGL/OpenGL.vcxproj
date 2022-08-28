@@ -171,6 +171,7 @@
     <ClInclude Include="res\vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\textures\ATAM.jpg" />
     <Image Include="res\textures\wall.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
