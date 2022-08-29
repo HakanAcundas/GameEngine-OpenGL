@@ -1,7 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
 #include <gl\glew.h>
 #include <GLFW\glfw3.h>
 #include "API/VertexBuffer.h"
@@ -10,7 +6,6 @@
 #include "res/vendor/stb_image/stb_image.h"
 #include "API/TextureManager.h"
 
-#define STB_IMAGE_IMPLEMENTATION
 #define WIDTH 860
 #define HEIGHT 640
 
@@ -75,10 +70,10 @@ int main(int argc, char* argv[])
 
 	float vertices[] = {
 		//positions				//colors			//texture coordinates
-		 0.5f,  0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	1.0f, 1.0f,  // top right
+		 0.5f,  0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	1.0f, 1.0f, // top right
 		 0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	1.0f, 0.0f, // bottom right
 		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f, 1.0f,	0.0f, 0.0f, // bottom left
-		-0.5f,  0.5f ,0.0f,		1.0f, 1.0f, 0.0f,	0.0f, 1.0f // top left
+		-0.5f,  0.5f ,0.0f,		1.0f, 1.0f, 0.0f,	0.0f, 1.0f  // top left
 	};
 
 	float texCoords[] = {
@@ -117,7 +112,7 @@ int main(int argc, char* argv[])
 
 	TextureManager texture;
 	std::string imagePath = "res/textures/ATAM.jpg";
-	int width, height, nrChannels;
+	//int width, height, nrChannels;
 	texture.TextureFlipVertically();
 	texture.LoadTexture(imagePath, 500, 500, 3);
 	texture.FreeImageData();
