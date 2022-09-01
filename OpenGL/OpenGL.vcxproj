@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="API\Camera.cpp" />
     <ClCompile Include="API\TextureManager.cpp" />
     <ClCompile Include="API\VertexArray.cpp" />
     <ClCompile Include="API\VertexBuffer.cpp" />
@@ -304,6 +305,7 @@
     <None Include="res\vendor\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="API\Camera.h" />
     <ClInclude Include="API\TextureManager.h" />
     <ClInclude Include="API\VertexArray.h" />
     <ClInclude Include="API\VertexBuffer.h" />

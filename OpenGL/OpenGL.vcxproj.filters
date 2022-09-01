@@ -36,6 +36,9 @@
     <ClCompile Include="res\vendor\glm\detail\glm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="API\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\shaders.shader" />
@@ -1329,6 +1332,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="res\vendor\glm\simd\vector_relational.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="API\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
