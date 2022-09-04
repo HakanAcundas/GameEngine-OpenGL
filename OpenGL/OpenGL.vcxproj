@@ -600,7 +600,9 @@
     <ClInclude Include="res\vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\textures\apertureScienceLogo.png" />
     <Image Include="res\textures\ATAM.jpg" />
+    <Image Include="res\textures\portalCube.jpg" />
     <Image Include="res\textures\stoneWall.jpg" />
     <Image Include="res\textures\stoneWall2.jpg" />
     <Image Include="res\textures\wall.jpg" />

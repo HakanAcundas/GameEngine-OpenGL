@@ -1352,5 +1352,11 @@
     <Image Include="res\textures\stoneWall2.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\textures\portalCube.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\apertureScienceLogo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
