@@ -163,6 +163,7 @@
     <ClCompile Include="res\vendor\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\lamp.shader" />
     <None Include="res\shaders\shaders.shader" />
     <None Include="res\vendor\glm\detail\func_common.inl" />
     <None Include="res\vendor\glm\detail\func_common_simd.inl" />

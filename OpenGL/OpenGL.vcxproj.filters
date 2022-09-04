@@ -459,6 +459,7 @@
     <None Include="res\vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="res\shaders\lamp.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="API\VertexBuffer.h">

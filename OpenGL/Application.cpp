@@ -21,6 +21,8 @@ bool firstMouse = true;
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+
 void resizeWindow(int x, int y, int width = HEIGHT, int height = HEIGHT)
 {
 	glViewport(x, y, width, height);
@@ -85,12 +87,56 @@ int main(int argc, char* argv[])
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	float vertices[] = {
+	float verticesBasic[] = {
 		//positions				//colors			//texture coordinates
 		 0.5f,  0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	1.0f, 1.0f, // top right
 		 0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	1.0f, 0.0f, // bottom right
 		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f, 1.0f,	0.0f, 0.0f, // bottom left
 		-0.5f,  0.5f ,0.0f,		1.0f, 1.0f, 0.0f,	0.0f, 1.0f  // top left
+	};
+
+	float vertices[] = {
+			-0.5f, -0.5f, -0.5f,
+			 0.5f, -0.5f, -0.5f,
+			 0.5f,  0.5f, -0.5f,
+			 0.5f,  0.5f, -0.5f,
+			-0.5f,  0.5f, -0.5f,
+			-0.5f, -0.5f, -0.5f,
+
+			-0.5f, -0.5f,  0.5f,
+			 0.5f, -0.5f,  0.5f,
+			 0.5f,  0.5f,  0.5f,
+			 0.5f,  0.5f,  0.5f,
+			-0.5f,  0.5f,  0.5f,
+			-0.5f, -0.5f,  0.5f,
+
+			-0.5f,  0.5f,  0.5f,
+			-0.5f,  0.5f, -0.5f,
+			-0.5f, -0.5f, -0.5f,
+			-0.5f, -0.5f, -0.5f,
+			-0.5f, -0.5f,  0.5f,
+			-0.5f,  0.5f,  0.5f,
+
+			 0.5f,  0.5f,  0.5f,
+			 0.5f,  0.5f, -0.5f,
+			 0.5f, -0.5f, -0.5f,
+			 0.5f, -0.5f, -0.5f,
+			 0.5f, -0.5f,  0.5f,
+			 0.5f,  0.5f,  0.5f,
+
+			-0.5f, -0.5f, -0.5f,
+			 0.5f, -0.5f, -0.5f,
+			 0.5f, -0.5f,  0.5f,
+			 0.5f, -0.5f,  0.5f,
+			-0.5f, -0.5f,  0.5f,
+			-0.5f, -0.5f, -0.5f,
+
+			-0.5f,  0.5f, -0.5f,
+			 0.5f,  0.5f, -0.5f,
+			 0.5f,  0.5f,  0.5f,
+			 0.5f,  0.5f,  0.5f,
+			-0.5f,  0.5f,  0.5f,
+			-0.5f,  0.5f, -0.5f,
 	};
 
 	float vertices36[] = {
@@ -134,9 +180,52 @@ int main(int argc, char* argv[])
 		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f, 0.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f, 0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+
+		 0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f, 0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+
+		-0.5f,  0.5f, -0.5f, 0.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f, 0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f, 0.0f, 0.0f
 	};
 
+	//For 10 cube spawn
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
 		glm::vec3(2.0f,  5.0f, -15.0f),
@@ -150,12 +239,6 @@ int main(int argc, char* argv[])
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	float texCoords[] = {
-	0.0f, 0.0f,  // lower-left corner  
-	1.0f, 0.0f,  // lower-right corner
-	0.5f, 1.0f   // top-center corner
-	};
-
 	int indices[] = {
 		3,0,2,
 		0,1,2
@@ -165,35 +248,53 @@ int main(int argc, char* argv[])
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 
+	VertexBuffer vertexBufferObject(sizeof(vertices), vertices);
 	VertexArray vertexArrayObject;
-	VertexBuffer vertexBufferObject(sizeof(vertices36), vertices36);
 
 	/*unsigned int elementBuffer;
 	glGenBuffers(1, &elementBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
 
+	VertexArray vertexArrayLightObject;
+	vertexBufferObject.Bind();
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3* sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	
+	//Shader Resourece File Paths
 	std::string filePath = "res/shaders/shaders.shader";
+	std::string filePathLamp = "res/shaders/lamp.shader";
+
+	//Shader Manager Texture
 	ShaderManeger shaderManeger;
 	ShaderSources shaderSources = shaderManeger.ParseShaders(filePath);
 	unsigned int shaderProgram = shaderManeger.CreateShader(shaderSources.vertexSource, shaderSources.fragmentSource);
 
+	//Shader Manager Lamp
+	ShaderSources shaderSourcesLamp = shaderManeger.ParseShaders(filePathLamp);
+	unsigned int shaderProgramLamp = shaderManeger.CreateShader(shaderSourcesLamp.vertexSource, shaderSourcesLamp.fragmentSource);
+
+	//Wall Brick Texture
 	TextureManager texture;
 	std::string imagePath = "res/textures/stoneWall2.jpg";
 	texture.TextureFlipVertically();
 	texture.LoadTexture(imagePath, 1000, 1000, 3);
 	texture.FreeImageData();
-	
-	glUseProgram(shaderProgram);
 
+	//Cube Object Uniforms
 	unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
 	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+	unsigned int objectColorLoc = glGetUniformLocation(shaderProgram, "objectColor");
+	unsigned int lightColorLoc = glGetUniformLocation(shaderProgram, "lightColor");
+
+	///Lamp Object Uniforms
+	unsigned int modelLampLoc = glGetUniformLocation(shaderProgramLamp, "modelLamp");
+	unsigned int viewLampLoc = glGetUniformLocation(shaderProgramLamp, "viewLamp");
+	unsigned int projectionLampLoc = glGetUniformLocation(shaderProgramLamp, "projectionLamp");
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -207,16 +308,47 @@ int main(int argc, char* argv[])
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-		glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
+		//Render Cube
+		glUseProgram(shaderProgram);
 
-		float radius = 10.0f;
+		glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
+		glUniform3fv(objectColorLoc, 1, &objectColor[0]);
+
+		glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+		glUniform3fv(lightColorLoc, 1, &lightColor[0]);
+
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, &projection[0][0]);
+
+		glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+
+		glm::mat4 model = glm::mat4(1.0f);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model[0][0]);
+
+		vertexArrayObject.Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		//Render Lamp Cube
+		glUseProgram(shaderProgramLamp);
+		glUniformMatrix4fv(projectionLampLoc, 1, GL_FALSE, &projection[0][0]);
+		glUniformMatrix4fv(viewLampLoc, 1, GL_FALSE, &view[0][0]);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, lightPos);
+		model = glm::scale(model, glm::vec3(0.2f));
+		glUniformMatrix4fv(modelLampLoc, 1, GL_FALSE, &model[0][0]);
+		vertexArrayLightObject.Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		//10 Diffirent rotation cube spawn
+		/*float radius = 10.0f;
 		float camX = static_cast<float>(sin(glfwGetTime()) * radius);
 		float camZ = static_cast<float>(cos(glfwGetTime()) * radius);
-
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, &projection[0][0]);
 
 		for (unsigned int i = 0; i < 10; i++)
 		{
@@ -230,13 +362,14 @@ int main(int argc, char* argv[])
 			model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model[0][0]);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		}*/
 
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	vertexArrayObject.~VertexArray();
+	vertexArrayLightObject.~VertexArray();
 	vertexBufferObject.~VertexBuffer();
 	//glDeleteBuffers(1, &elementBuffer);
 	texture.~TextureManager();

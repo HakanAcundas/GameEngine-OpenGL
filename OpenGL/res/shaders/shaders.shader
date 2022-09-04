@@ -2,9 +2,9 @@
 #version 330 core
 
 layout(location = 0) in vec3 inputPosition;
-layout(location = 1) in vec2 inputTextureCoordinates;
+//layout(location = 1) in vec2 inputTextureCoordinates;
 
-out vec2 vertexTextureCoordinates;
+//out vec2 vertexTextureCoordinates;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -13,7 +13,7 @@ uniform mat4 projection;
 void main()
 {
 	gl_Position = projection * view * model * vec4(inputPosition, 1.0);
-	vertexTextureCoordinates = inputTextureCoordinates;
+	//vertexTextureCoordinates = inputTextureCoordinates;
 }
 
 #shader fragment
@@ -22,9 +22,12 @@ void main()
 out vec4 fragmentColor;
 in vec2 vertexTextureCoordinates;
 
-uniform sampler2D fragmentTexture;
+//uniform sampler2D fragmentTexture;
 
+uniform vec3 objectColor;
+uniform vec3 lightColor;
 void main()
 {
-	fragmentColor = texture(fragmentTexture, vertexTextureCoordinates);
+	//fragmentColor = texture(fragmentTexture, vertexTextureCoordinates);
+	fragmentColor = vec4(lightColor * objectColor, 1.0);
 }
