@@ -25,10 +25,12 @@ void main()
 #shader fragment
 #version 330 core
 
+out vec4 fragmentColor;
+
 struct Material {
     sampler2D  diffuse;
     sampler2D  specular;
-    float shininess;
+    float      shininess;
 };
 
 struct Light {
@@ -39,14 +41,13 @@ struct Light {
     vec3 specular;
 };
 
-uniform Material material;
-uniform Light light;
-uniform vec3 viewPosition;
-
 in vec2 TextureCoords;
 in vec3 Normal;
 in vec3 fragPosition;
-out vec4 fragmentColor;
+
+uniform Material material;
+uniform Light light;
+uniform vec3 viewPosition;
 
 void main()
 {

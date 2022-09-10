@@ -273,12 +273,14 @@ int main(int argc, char* argv[])
 	std::string filePath = "res/shaders/shaders.shader";
 	std::string filePathLamp = "res/shaders/lamp.shader";
 
-	//Shader Manager Texture
+	//Shader Manager
 	ShaderManeger shaderManeger;
+
+	//Shader Cube
 	ShaderSources shaderSources = shaderManeger.ParseShaders(filePath);
 	unsigned int shaderProgram = shaderManeger.CreateShader(shaderSources.vertexSource, shaderSources.fragmentSource);
 
-	//Shader Manager Lamp
+	//Shader Lamp
 	ShaderSources shaderSourcesLamp = shaderManeger.ParseShaders(filePathLamp);
 	unsigned int shaderProgramLamp = shaderManeger.CreateShader(shaderSourcesLamp.vertexSource, shaderSourcesLamp.fragmentSource);
 
@@ -293,32 +295,9 @@ int main(int argc, char* argv[])
 	textureSpecular.TextureFlipVertically();
 	textureSpecular.LoadTexture(imagePath1, 500, 500);
 
-	//Cube Object Uniforms
-	unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
-	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
-	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-	unsigned int lightPositionLoc = glGetUniformLocation(shaderProgram, "light.position"); 
-	unsigned int viewPosition = glGetUniformLocation(shaderProgram, "viewPosition"); 
-
-	//Cube Object ambient, diffuse, specular values
-	//unsigned int ambientLoc = glGetUniformLocation(shaderProgram, "material.ambient");
-	unsigned int diffuseLoc = glGetUniformLocation(shaderProgram, "material.diffuse");
-	unsigned int specularLoc = glGetUniformLocation(shaderProgram, "material.specular");
-	unsigned int shininessLoc = glGetUniformLocation(shaderProgram, "material.shininess");
-
-	//Lamp Object ambient, diffuse, specular values
-	unsigned int ambientLightLoc = glGetUniformLocation(shaderProgram, "light.ambient");
-	unsigned int diffuseLightLoc = glGetUniformLocation(shaderProgram, "light.diffuse");
-	unsigned int specularLightLoc = glGetUniformLocation(shaderProgram, "light.specular");
-
-	///Lamp Object Uniforms
-	unsigned int modelLampLoc = glGetUniformLocation(shaderProgramLamp, "modelLamp");
-	unsigned int viewLampLoc = glGetUniformLocation(shaderProgramLamp, "viewLamp");
-	unsigned int projectionLampLoc = glGetUniformLocation(shaderProgramLamp, "projectionLamp");
-
-	glUseProgram(shaderProgram);
-	glUniform1d(diffuseLoc, 0);
-	glUniform1d(specularLoc, 1);
+	shaderManeger.Use(shaderProgram);
+	shaderManeger.SetInt(shaderProgram, "material.diffuse", 0);
+	shaderManeger.SetInt(shaderProgram, "material.specular", 1);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -329,28 +308,18 @@ int main(int argc, char* argv[])
 		processInput(window);
 
 		//resizeWindow();
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		/*float x = glm::cos((float)glfwGetTime());
+		float x = glm::cos((float)glfwGetTime());
 		float y = glm::sin((float)glfwGetTime());
-		lightPos = glm::vec3(x, y, x);*/
+		lightPos = glm::vec3(x, y, x);
 
-		//Render Cube
-		glUseProgram(shaderProgram);
+		//Render Cube Uniforms
+		shaderManeger.Use(shaderProgram);
 
-		glUniform3fv(lightPositionLoc, 1, &lightPos[0]);
-
-		glUniform3fv(viewPosition, 1, &camera.Position[0]);
-
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, &projection[0][0]);
-
-		glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-
-		glm::mat4 model = glm::mat4(1.0f);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model[0][0]);
+		shaderManeger.SetVec3(shaderProgram, "light.position", lightPos);
+		shaderManeger.SetVec3(shaderProgram, "viewPosition", camera.Position);
 
 		//Lamp Cube ambient, diffuse, specular and values initilazation
 		/*glm::vec3 lightColor;
@@ -358,18 +327,23 @@ int main(int argc, char* argv[])
 		lightColor.y = sin(glfwGetTime() * 0.7f);
 		lightColor.z = sin(glfwGetTime() * 1.3f);*/
 
-		glm::vec3 ambientLight = glm::vec3(0.2f, 0.2f, 0.2f);
-		glUniform3fv(ambientLightLoc, 1, &ambientLight[0]);
+		shaderManeger.SetVec3(shaderProgram, "light.ambient", 0.2f, 0.2f, 0.2f);
 
-		glm::vec3 diffuseLight = glm::vec3(0.5f, 0.5f, 0.5f);
-		glUniform3fv(diffuseLightLoc, 1, &diffuseLight[0]);
+		shaderManeger.SetVec3(shaderProgram, "light.diffuse", 0.5f, 0.5f, 0.5f);
 
-		glm::vec3 specularLight = glm::vec3(1.0f, 1.0f, 1.0f);
-		glUniform3fv(specularLightLoc, 1, &specularLight[0]);
+		shaderManeger.SetVec3(shaderProgram, "light.specular", 1.0f, 1.0f, 1.0f);
 
 		//Cube Object ambient, diffuse, specular and shineness values initilazation
-		float shineness = 64.0f;
-		glUniform1f(shininessLoc, shineness);
+		shaderManeger.SetFloat(shaderProgram, "material.shininess", 64.0f);
+
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+		shaderManeger.SetMat4(shaderProgram, "projection", projection);
+
+		glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
+		shaderManeger.SetMat4(shaderProgram, "view", view);
+
+		glm::mat4 model = glm::mat4(1.0f);
+		shaderManeger.SetMat4(shaderProgram, "model", model);
 
 		glActiveTexture(GL_TEXTURE0);
 		texture.Bind();
@@ -380,15 +354,15 @@ int main(int argc, char* argv[])
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		//Render Lamp Cube 
-		glUseProgram(shaderProgramLamp);
-		glUniformMatrix4fv(projectionLampLoc, 1, GL_FALSE, &projection[0][0]);
-		glUniformMatrix4fv(viewLampLoc, 1, GL_FALSE, &view[0][0]);
+		shaderManeger.Use(shaderProgramLamp);
+		shaderManeger.SetMat4(shaderProgramLamp, "projectionLamp", projection);
+		shaderManeger.SetMat4(shaderProgramLamp, "viewLamp", view);
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, lightPos);
 		//model = glm::translate(model, glm::vec3(x, y, x));
 		model = glm::scale(model, glm::vec3(0.2f));
-		glUniformMatrix4fv(modelLampLoc, 1, GL_FALSE, &model[0][0]);
+		shaderManeger.SetMat4(shaderProgramLamp, "modelLamp", model);
 
 		vertexArrayLightObject.Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 36);

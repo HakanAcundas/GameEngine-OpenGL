@@ -17,6 +17,12 @@ struct ShaderSources
 class ShaderManeger
 {
 public:
+	unsigned int m_ShaderVertexID;
+	unsigned int m_ShaderFragmentID;
+
+
+public:
+
 	ShaderManeger();
 	~ShaderManeger();
 
@@ -24,23 +30,23 @@ public:
 	unsigned int CompileShader(unsigned int type, const std::string& source);
 	unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 
-	void Use() const;
-	void SetBool(const std::string &name, bool value) const;
-	void SetInt(const std::string &name, bool value) const;
-	void SetFloat(const std::string &name, bool value) const;
+	static void Use(unsigned int shaderID);
+	static void SetBool(unsigned int shaderID, const std::string & uniformName, bool value);
+	static void SetInt(unsigned int shaderID, const std::string & uniformName, bool value);
+	static void SetFloat(unsigned int shaderID, const std::string & uniformName, bool value);
 
-	void SetVec2(const std::string &name, float x, float y) const;
-	void SetVec2(const std::string &name, const glm::vec2 &value) const;
+	static void SetVec2(unsigned int shaderID, const std::string & uniformName, float x, float y);
+	static void SetVec2(unsigned int shaderID, const std::string & uniformName, const glm::vec2 &value);
 
-	void SetVec3(const std::string &name, float x, float y, float z) const;
-	void SetVec3(const std::string &name, const glm::vec3 &value) const;
+	static void SetVec3(unsigned int shaderID, const std::string & uniformName, float x, float y, float z);
+	static void SetVec3(unsigned int shaderID, const std::string & uniformName, const glm::vec3 &value);
 
-	void SetVec4(const std::string& name, float x, float y, float z, float w) const;
-	void SetVec4(const std::string& name, const glm::vec4& value) const;
+	static void SetVec4(unsigned int shaderID, const std::string& uniformName, float x, float y, float z, float w);
+	static void SetVec4(unsigned int shaderID, const std::string& uniformName, const glm::vec4& value);
 
-	void SetMat2(const std::string& name, const glm::mat2 &value) const;
-	void SetMat3(const std::string& name, const glm::mat3& value) const;
-	void SetMat4(const std::string& name, const glm::mat4& value) const;
+	static void SetMat2(unsigned int shaderID, const std::string& uniformName, const glm::mat2 &value);
+	static void SetMat3(unsigned int shaderID, const std::string& uniformName, const glm::mat3& value);
+	static void SetMat4(unsigned int shaderID, const std::string& uniformName, const glm::mat4& value);
 
 private:
 
