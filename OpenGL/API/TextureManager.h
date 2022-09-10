@@ -14,7 +14,7 @@ public:
 	void UnBind() const;
 	void FreeImageData() const;
 
-	void LoadTexture(std::string& imagePath, int width, int height, int nrChannels);
+	void LoadTexture(std::string& imagePath, int width, int height);
 	void TextureFlipVertically();
 private:
 	unsigned int m_TextureID;

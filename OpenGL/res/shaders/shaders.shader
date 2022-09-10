@@ -3,11 +3,11 @@
 
 layout(location = 0) in vec3 inputPosition;
 layout(location = 1) in vec3 inputNormal;
-//layout(location = 1) in vec2 inputTextureCoordinates;
+layout(location = 2) in vec2 inputTextureCoords;
 
-//out vec2 vertexTextureCoordinates;
 out vec3 fragPosition;
 out vec3 Normal;
+out vec2 TextureCoords;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -18,42 +18,52 @@ void main()
 	fragPosition = vec3(model * vec4(inputPosition, 1.0));
     Normal = mat3(transpose(inverse(model))) * inputNormal;
 	gl_Position = projection * view * model * vec4(inputPosition, 1.0);
-	//vertexTextureCoordinates = inputTextureCoordinates;
+
+    TextureCoords = inputTextureCoords;
 }
 
 #shader fragment
 #version 330 core
 
-out vec4 fragmentColor;
-//in vec2 vertexTextureCoordinates;
-in vec3 fragPosition;
-in vec3 Normal;
+struct Material {
+    sampler2D  diffuse;
+    sampler2D  specular;
+    float shininess;
+};
 
-uniform vec3 objectColor;
-uniform vec3 lightColor;
-uniform vec3 lightPosition;
+struct Light {
+    vec3 position;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+uniform Material material;
+uniform Light light;
 uniform vec3 viewPosition;
-//uniform sampler2D fragmentTexture;
+
+in vec2 TextureCoords;
+in vec3 Normal;
+in vec3 fragPosition;
+out vec4 fragmentColor;
 
 void main()
 {
-	//fragmentColor = texture(fragmentTexture, vertexTextureCoordinates);
-    float ambientStrength = 0.1;
-    vec3 ambient = ambientStrength * lightColor;
+    vec3 ambient = light.ambient * vec3(texture(material.diffuse, TextureCoords));
 
     // diffuse 
     vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(lightPosition - fragPosition);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
+    vec3 lightDirection = normalize(light.position - fragPosition);
+    float diff = max(dot(norm, lightDirection), 0.0);
+    vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TextureCoords));
 
     // specular
-    float specularStrength = 1.2;
-    vec3 viewDir = normalize(viewPosition - fragPosition);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = specularStrength * spec * lightColor;
+    vec3 viewDirection = normalize(viewPosition - fragPosition);
+    vec3 reflectDirection = reflect(-lightDirection, norm);
+    float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
+    vec3 specular = light.specular * spec * vec3(texture(material.specular, TextureCoords));
 
-    vec3 result = (ambient + diffuse + specular) * objectColor;
+    vec3 result = ambient + diffuse + specular;
     fragmentColor = vec4(result, 1.0);
 }

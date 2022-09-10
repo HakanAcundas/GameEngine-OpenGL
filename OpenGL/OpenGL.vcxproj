@@ -602,6 +602,9 @@
   <ItemGroup>
     <Image Include="res\textures\apertureScienceLogo.png" />
     <Image Include="res\textures\ATAM.jpg" />
+    <Image Include="res\textures\container2.png" />
+    <Image Include="res\textures\container2_specular.png" />
+    <Image Include="res\textures\cube.png" />
     <Image Include="res\textures\portalCube.jpg" />
     <Image Include="res\textures\stoneWall.jpg" />
     <Image Include="res\textures\stoneWall2.jpg" />
