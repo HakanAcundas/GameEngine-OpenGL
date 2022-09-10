@@ -81,3 +81,68 @@ unsigned int ShaderManeger::CreateShader(const std::string& vertexShader, const 
 
 	return shaderProgram;
 }
+
+void ShaderManeger::Use() const
+{
+
+}
+
+void ShaderManeger::SetBool(const std::string& name, bool value) const
+{
+
+}
+
+void ShaderManeger::SetInt(const std::string& name, bool value) const
+{
+
+}
+
+void ShaderManeger::SetFloat(const std::string& name, bool value) const
+{
+
+}
+
+void ShaderManeger::SetVec2(const std::string& name, float x, float y) const
+{
+
+}
+
+void ShaderManeger::SetVec2(const std::string& name, const glm::vec2& value) const
+{
+}
+
+void ShaderManeger::SetVec3(const std::string& name, float x, float y, float z) const
+{
+
+}
+
+void ShaderManeger::SetVec3(const std::string& name, const glm::vec3& value) const
+{
+
+}
+
+void ShaderManeger::SetVec4(const std::string& name, float x, float y, float z, float w) const
+{
+
+}
+
+void ShaderManeger::SetVec4(const std::string& name, const glm::vec4& value) const
+{
+
+}
+
+void ShaderManeger::SetMat2(const std::string& name, const glm::mat2& value) const
+{
+
+}
+
+void ShaderManeger::SetMat3(const std::string& name, const glm::mat3& value) const
+{
+
+}
+
+void ShaderManeger::SetMat4(const std::string& name, const glm::mat4& value) const
+{
+
+}
+

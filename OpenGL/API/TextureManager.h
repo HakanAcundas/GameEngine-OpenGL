@@ -4,6 +4,7 @@
 #include <iostream>
 #include "..\res/vendor/stb_image/stb_image.h"
 
+
 class TextureManager
 {
 public:
