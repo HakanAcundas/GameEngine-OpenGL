@@ -5,11 +5,11 @@
 #include "..\res/vendor/stb_image/stb_image.h"
 
 
-class TextureManager
+class Texture
 {
 public:
-	TextureManager();
-	~TextureManager();
+	Texture();
+	~Texture();
 
 	void Bind() const;
 	void UnBind() const;

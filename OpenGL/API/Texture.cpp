@@ -1,6 +1,6 @@
-#include "TextureManager.h"
+#include "Texture.h"
 
-TextureManager::TextureManager()
+Texture::Texture()
 {
 	glGenTextures(1, &m_TextureID);
 	glBindTexture(GL_TEXTURE_2D, m_TextureID);
@@ -11,22 +11,22 @@ TextureManager::TextureManager()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-TextureManager::~TextureManager()
+Texture::~Texture()
 {
 	glDeleteTextures(1, &m_TextureID);
 }
 
-void TextureManager::Bind() const
+void Texture::Bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, m_TextureID);
 }
 
-void TextureManager::UnBind() const
+void Texture::UnBind() const
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void TextureManager::LoadTexture(std::string& imagePath, int width, int height)
+void Texture::LoadTexture(std::string& imagePath, int width, int height)
 {
 	int nrComponents;
 	m_TextureData = stbi_load(imagePath.c_str(), &width, &height, &nrComponents, 0);
@@ -58,12 +58,12 @@ void TextureManager::LoadTexture(std::string& imagePath, int width, int height)
 	}
 }
 
-void TextureManager::TextureFlipVertically()
+void Texture::TextureFlipVertically()
 {
 	stbi_set_flip_vertically_on_load(true);
 }
 
-void TextureManager::FreeImageData() const
+void Texture::FreeImageData() const
 {
 	stbi_image_free(m_TextureData);
 }

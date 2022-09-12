@@ -4,7 +4,7 @@
 #include "API/VertexArray.h"
 #include "res/shaders/ShadersManeger.h"
 #include "res/vendor/stb_image/stb_image.h"
-#include "API/TextureManager.h"
+#include "API/Texture.h"
 #include "API/Camera.h"
 
 #define WIDTH 860
@@ -270,14 +270,14 @@ int main(int argc, char* argv[])
 	glEnableVertexAttribArray(0);
 	
 	//Shader Resourece File Paths
-	std::string filePath = "res/shaders/shaders.shader";
+	std::string filePathCube = "res/shaders/shaders.shader";
 	std::string filePathLamp = "res/shaders/lamp.shader";
 
 	//Shader Manager
 	ShaderManeger shaderManeger;
 
 	//Shader Cube
-	ShaderSources shaderSources = shaderManeger.ParseShaders(filePath);
+	ShaderSources shaderSources = shaderManeger.ParseShaders(filePathCube);
 	unsigned int shaderProgram = shaderManeger.CreateShader(shaderSources.vertexSource, shaderSources.fragmentSource);
 
 	//Shader Lamp
@@ -285,12 +285,12 @@ int main(int argc, char* argv[])
 	unsigned int shaderProgramLamp = shaderManeger.CreateShader(shaderSourcesLamp.vertexSource, shaderSourcesLamp.fragmentSource);
 
 	//Wall Brick Texture
-	TextureManager texture;
+	Texture cube;
 	std::string imagePath = "res/textures/container2.png";
-	texture.TextureFlipVertically();
-	texture.LoadTexture(imagePath, 500, 500);
+	cube.TextureFlipVertically();
+	cube.LoadTexture(imagePath, 500, 500);
 
-	TextureManager textureSpecular;
+	Texture textureSpecular;
 	std::string imagePath1 = "res/textures/container2_specular.png";
 	textureSpecular.TextureFlipVertically();
 	textureSpecular.LoadTexture(imagePath1, 500, 500);
@@ -346,7 +346,7 @@ int main(int argc, char* argv[])
 		shaderManeger.SetMat4(shaderProgram, "model", model);
 
 		glActiveTexture(GL_TEXTURE0);
-		texture.Bind();
+		cube.Bind();
 		glActiveTexture(GL_TEXTURE1);
 		textureSpecular.Bind();
 
@@ -396,8 +396,8 @@ int main(int argc, char* argv[])
 	vertexArrayLightObject.~VertexArray();
 	vertexBufferObject.~VertexBuffer();
 	//glDeleteBuffers(1, &elementBuffer);
-	texture.~TextureManager();
-	textureSpecular.~TextureManager();
+	cube.~Texture();
+	textureSpecular.~Texture();
 	glfwTerminate();
 	return 0;
 }
