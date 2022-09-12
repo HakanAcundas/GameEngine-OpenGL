@@ -250,13 +250,13 @@ int main(int argc, char* argv[])
 	glEnable(GL_DEPTH_TEST);
 
 	VertexBuffer vertexBufferObject(sizeof(vertices), vertices);
-	VertexArray vertexArrayObject;
 
 	/*unsigned int elementBuffer;
 	glGenBuffers(1, &elementBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
 
+	VertexArray vertexArrayObject;
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
