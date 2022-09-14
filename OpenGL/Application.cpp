@@ -296,8 +296,8 @@ int main(int argc, char* argv[])
 	textureSpecular.LoadTexture(imagePath1, 500, 500);
 
 	shaderManeger.Use(shaderProgram);
-	shaderManeger.SetInt(shaderProgram, "material.diffuse", 0);
-	shaderManeger.SetInt(shaderProgram, "material.specular", 1);
+	shaderManeger.SetInt(shaderProgram, "material.diffuse", 0.0f);
+	shaderManeger.SetInt(shaderProgram, "material.specular", 1.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
