@@ -328,10 +328,11 @@ int main(int argc, char* argv[])
 		lightColor.z = sin(glfwGetTime() * 1.3f);*/
 
 		shaderManeger.SetVec3(shaderProgramCube, "light.ambient", 0.2f, 0.2f, 0.2f);
-
 		shaderManeger.SetVec3(shaderProgramCube, "light.diffuse", 0.5f, 0.5f, 0.5f);
-
 		shaderManeger.SetVec3(shaderProgramCube, "light.specular", 1.0f, 1.0f, 1.0f);
+		shaderManeger.SetFloat(shaderProgramCube, "light.constant", 1.0f);
+		shaderManeger.SetFloat(shaderProgramCube, "light.linear", 0.09f);
+		shaderManeger.SetFloat(shaderProgramCube, "light.quadratic", 0.032f);
 
 		//Cube Object ambient, diffuse, specular and shineness values initilazation
 		shaderManeger.SetFloat(shaderProgramCube, "material.shininess", 64.0f);
