@@ -41,7 +41,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\shaders.shader" />
+    <None Include="res\shaders\spotLight.shader" />
     <None Include="res\vendor\glm\detail\func_common.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -460,6 +460,8 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="res\shaders\lamp.shader" />
+    <None Include="res\shaders\pointLight.shader" />
+    <None Include="res\shaders\directional.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="API\VertexBuffer.h">

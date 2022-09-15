@@ -15,9 +15,9 @@ uniform mat4 projection;
 
 void main()
 {
-	fragPosition = vec3(model * vec4(inputPosition, 1.0));
+    fragPosition = vec3(model * vec4(inputPosition, 1.0));
     Normal = mat3(transpose(inverse(model))) * inputNormal;
-	gl_Position = projection * view * model * vec4(inputPosition, 1.0);
+    gl_Position = projection * view * model * vec4(inputPosition, 1.0);
 
     TextureCoords = inputTextureCoords;
 }
