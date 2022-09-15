@@ -32,8 +32,8 @@ public:
 
 	static void Use(unsigned int shaderID);
 	static void SetBool(unsigned int shaderID, const std::string & uniformName, bool value);
-	static void SetInt(unsigned int shaderID, const std::string & uniformName, bool value);
-	static void SetFloat(unsigned int shaderID, const std::string & uniformName, bool value);
+	static void SetInt(unsigned int shaderID, const std::string & uniformName, int value);
+	static void SetFloat(unsigned int shaderID, const std::string & uniformName, float value);
 
 	static void SetVec2(unsigned int shaderID, const std::string & uniformName, float x, float y);
 	static void SetVec2(unsigned int shaderID, const std::string & uniformName, const glm::vec2 &value);

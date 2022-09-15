@@ -92,12 +92,12 @@ void ShaderManeger::SetBool(unsigned int shaderID, const std::string& uniformNam
 	glUniform1i(glGetUniformLocation(shaderID, uniformName.c_str()), value);
 }
 
-void ShaderManeger::SetInt(unsigned int shaderID, const std::string& uniformName, bool value)
+void ShaderManeger::SetInt(unsigned int shaderID, const std::string& uniformName, int value)
 {
-	glUniform1d(glGetUniformLocation(shaderID, uniformName.c_str()), value);
+	glUniform1i(glGetUniformLocation(shaderID, uniformName.c_str()), value);
 }
 
-void ShaderManeger::SetFloat(unsigned int shaderID, const std::string& uniformName, bool value)
+void ShaderManeger::SetFloat(unsigned int shaderID, const std::string& uniformName, float value)
 {
 	glUniform1f(glGetUniformLocation(shaderID, uniformName.c_str()), value);
 }

@@ -17,9 +17,9 @@ void main()
 {
 	fragPosition = vec3(model * vec4(inputPosition, 1.0));
     Normal = mat3(transpose(inverse(model))) * inputNormal;
-	gl_Position = projection * view * model * vec4(inputPosition, 1.0);
-
     TextureCoords = inputTextureCoords;
+
+	gl_Position = projection * view * model * vec4(inputPosition, 1.0);
 }
 
 #shader fragment
@@ -44,34 +44,34 @@ struct Light {
     vec3 specular;
 
     float constant;
-    float linear;
+    float linearSpot;
     float quadratic;
 };
 
-in vec3 FragPos;
+in vec3 fragPosition;
 in vec3 Normal;
-in vec2 TexCoords;
+in vec2 TextureCoords;
 
-uniform vec3 viewPos;
+uniform vec3 viewPosition;
 uniform Material material;
 uniform Light light;
 
 void main()
 {
     // ambient
-    vec3 ambient = light.ambient * texture(material.diffuse, TexCoords).rgb;
+    vec3 ambient = light.ambient * vec3(texture(material.diffuse, TextureCoords));
 
     // diffuse 
     vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(light.position - FragPos);
+    vec3 lightDir = normalize(light.position - fragPosition);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = light.diffuse * diff * texture(material.diffuse, TexCoords).rgb;
+    vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TextureCoords));
 
     // specular
-    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 viewDir = normalize(viewPosition - fragPosition);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular = light.specular * spec * texture(material.specular, TexCoords).rgb;
+    vec3 specular = light.specular * spec * vec3(texture(material.specular, TextureCoords));
 
     // spotlight (soft edges)
     float theta = dot(lightDir, normalize(-light.direction));
@@ -81,8 +81,8 @@ void main()
     specular *= intensity;
 
     // attenuation
-    float distance = length(light.position - FragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+    float distance = length(light.position - fragPosition);
+    float attenuation = 1.0 / (light.constant + light.linearSpot * distance + light.quadratic * (distance * distance));
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;

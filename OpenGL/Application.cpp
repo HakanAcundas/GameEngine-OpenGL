@@ -270,7 +270,7 @@ int main(int argc, char* argv[])
 	glEnableVertexAttribArray(0);
 	
 	//Shader Resourece File Paths
-	std::string filePathCube = "res/shaders/directional.shader";
+	std::string filePathCube = "res/shaders/pointLight.shader";
 	std::string filePathLamp = "res/shaders/lamp.shader";
 
 	//Shader Manager
@@ -295,6 +295,10 @@ int main(int argc, char* argv[])
 	textureSpecular.TextureFlipVertically();
 	textureSpecular.LoadTexture(imagePath1, 500, 500);
 
+	shaderManeger.Use(shaderProgramCube);
+	shaderManeger.SetInt(shaderProgramCube, "material.diffuse", 0);
+	shaderManeger.SetInt(shaderProgramCube, "material.specular", 1);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
@@ -318,7 +322,7 @@ int main(int argc, char* argv[])
 		shaderManeger.SetVec3(shaderProgramCube, "light.direction", camera.Front);
 		shaderManeger.SetFloat(shaderProgramCube, "light.cutOff", glm::cos(glm::radians(12.5f)));
 		shaderManeger.SetFloat(shaderProgramCube, "light.outerCutOff", glm::cos(glm::radians(17.5f)));
-		shaderManeger.SetVec3(shaderProgramCube, "viewPos", camera.Position);
+		shaderManeger.SetVec3(shaderProgramCube, "viewPosition", camera.Position);
 
 		//Lamp Cube ambient, diffuse, specular and values initilazation
 		/*glm::vec3 lightColor;
@@ -327,15 +331,13 @@ int main(int argc, char* argv[])
 		lightColor.z = sin(glfwGetTime() * 1.3f);*/
 
 		shaderManeger.SetVec3(shaderProgramCube, "light.ambient", 0.2f, 0.2f, 0.2f);
-		shaderManeger.SetVec3(shaderProgramCube, "light.diffuse", 2.0f, 2.0f, 2.0f);
-		shaderManeger.SetVec3(shaderProgramCube, "light.specular", 3.0f, 3.0f, 3.0f);
+		shaderManeger.SetVec3(shaderProgramCube, "light.diffuse", 0.8f, 0.8f, 0.8f);
+		shaderManeger.SetVec3(shaderProgramCube, "light.specular", 1.0f, 1.0f, 1.0f);
 		shaderManeger.SetFloat(shaderProgramCube, "light.constant", 1.0f);
-		shaderManeger.SetFloat(shaderProgramCube, "light.linear", 0.09f);
+		shaderManeger.SetFloat(shaderProgramCube, "light.linearSpot", 0.09f);
 		shaderManeger.SetFloat(shaderProgramCube, "light.quadratic", 0.032f);
 
 		//Cube Object ambient, diffuse, specular and shineness values initilazation
-		shaderManeger.SetInt(shaderProgramCube, "material.diffuse", 0.0f);
-		shaderManeger.SetInt(shaderProgramCube, "material.specular", 1.0f);
 		shaderManeger.SetFloat(shaderProgramCube, "material.shininess", 32.0f);
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
@@ -344,13 +346,15 @@ int main(int argc, char* argv[])
 		glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
 		shaderManeger.SetMat4(shaderProgramCube, "view", view);
 
+		glm::mat4 model = glm::mat4(1.0f);
+		shaderManeger.SetMat4(shaderProgramCube, "model", model);
+
 		glActiveTexture(GL_TEXTURE0);
 		cube.Bind();
 		glActiveTexture(GL_TEXTURE1);
 		textureSpecular.Bind();
 
 		vertexArrayObject.Bind();
-		glm::mat4 model;
 		for (unsigned int i = 0; i < 10; i++)
 		{
 			model = glm::mat4(1.0f);
@@ -363,7 +367,7 @@ int main(int argc, char* argv[])
 		}
 
 		//Render Lamp Cube 
-		shaderManeger.Use(shaderProgramLamp);
+		/*shaderManeger.Use(shaderProgramLamp);
 		shaderManeger.SetMat4(shaderProgramLamp, "projectionLamp", projection);
 		shaderManeger.SetMat4(shaderProgramLamp, "viewLamp", view);
 
@@ -373,7 +377,7 @@ int main(int argc, char* argv[])
 		shaderManeger.SetMat4(shaderProgramLamp, "modelLamp", model);
 
 		vertexArrayLightObject.Bind();
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawArrays(GL_TRIANGLES, 0, 36);*/
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
