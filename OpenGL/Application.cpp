@@ -278,7 +278,7 @@ int main(int argc, char* argv[])
 
 	//Shader Cube
 	ShaderSources shaderSources = shaderManeger.ParseShaders(filePathCube);
-	unsigned int shaderProgram = shaderManeger.CreateShader(shaderSources.vertexSource, shaderSources.fragmentSource);
+	unsigned int shaderProgramCube = shaderManeger.CreateShader(shaderSources.vertexSource, shaderSources.fragmentSource);
 
 	//Shader Lamp
 	ShaderSources shaderSourcesLamp = shaderManeger.ParseShaders(filePathLamp);
@@ -295,9 +295,9 @@ int main(int argc, char* argv[])
 	textureSpecular.TextureFlipVertically();
 	textureSpecular.LoadTexture(imagePath1, 500, 500);
 
-	shaderManeger.Use(shaderProgram);
-	shaderManeger.SetInt(shaderProgram, "material.diffuse", 0.0f);
-	shaderManeger.SetInt(shaderProgram, "material.specular", 1.0f);
+	shaderManeger.Use(shaderProgramCube);
+	shaderManeger.SetInt(shaderProgramCube, "material.diffuse", 0.0f);
+	shaderManeger.SetInt(shaderProgramCube, "material.specular", 1.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -311,15 +311,15 @@ int main(int argc, char* argv[])
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		float x = glm::cos((float)glfwGetTime());
+		/*float x = glm::cos((float)glfwGetTime());
 		float y = glm::sin((float)glfwGetTime());
-		lightPos = glm::vec3(x, y, x);
+		lightPos = glm::vec3(x, y, x);*/
 
 		//Render Cube Uniforms
-		shaderManeger.Use(shaderProgram);
+		shaderManeger.Use(shaderProgramCube);
 
-		shaderManeger.SetVec3(shaderProgram, "light.position", lightPos);
-		shaderManeger.SetVec3(shaderProgram, "viewPosition", camera.Position);
+		shaderManeger.SetVec3(shaderProgramCube, "light.direction", -0.2f, -1.0f, -0.3f);
+		shaderManeger.SetVec3(shaderProgramCube, "viewPosition", camera.Position);
 
 		//Lamp Cube ambient, diffuse, specular and values initilazation
 		/*glm::vec3 lightColor;
@@ -327,45 +327,52 @@ int main(int argc, char* argv[])
 		lightColor.y = sin(glfwGetTime() * 0.7f);
 		lightColor.z = sin(glfwGetTime() * 1.3f);*/
 
-		shaderManeger.SetVec3(shaderProgram, "light.ambient", 0.2f, 0.2f, 0.2f);
+		shaderManeger.SetVec3(shaderProgramCube, "light.ambient", 0.2f, 0.2f, 0.2f);
 
-		shaderManeger.SetVec3(shaderProgram, "light.diffuse", 0.5f, 0.5f, 0.5f);
+		shaderManeger.SetVec3(shaderProgramCube, "light.diffuse", 0.5f, 0.5f, 0.5f);
 
-		shaderManeger.SetVec3(shaderProgram, "light.specular", 1.0f, 1.0f, 1.0f);
+		shaderManeger.SetVec3(shaderProgramCube, "light.specular", 1.0f, 1.0f, 1.0f);
 
 		//Cube Object ambient, diffuse, specular and shineness values initilazation
-		shaderManeger.SetFloat(shaderProgram, "material.shininess", 64.0f);
+		shaderManeger.SetFloat(shaderProgramCube, "material.shininess", 64.0f);
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-		shaderManeger.SetMat4(shaderProgram, "projection", projection);
+		shaderManeger.SetMat4(shaderProgramCube, "projection", projection);
 
 		glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
-		shaderManeger.SetMat4(shaderProgram, "view", view);
-
-		glm::mat4 model = glm::mat4(1.0f);
-		shaderManeger.SetMat4(shaderProgram, "model", model);
-
+		shaderManeger.SetMat4(shaderProgramCube, "view", view);
 		glActiveTexture(GL_TEXTURE0);
 		cube.Bind();
 		glActiveTexture(GL_TEXTURE1);
 		textureSpecular.Bind();
-
 		vertexArrayObject.Bind();
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glm::mat4 model;
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, cubePositions[i]);
+			float angle = 20.0f * i;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			shaderManeger.SetMat4(shaderProgramCube, "model", model);
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		//Render Lamp Cube 
-		shaderManeger.Use(shaderProgramLamp);
-		shaderManeger.SetMat4(shaderProgramLamp, "projectionLamp", projection);
-		shaderManeger.SetMat4(shaderProgramLamp, "viewLamp", view);
+		//shaderManeger.Use(shaderProgramLamp);
+		//shaderManeger.SetMat4(shaderProgramLamp, "projectionLamp", projection);
+		//shaderManeger.SetMat4(shaderProgramLamp, "viewLamp", view);
 
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, lightPos);
-		//model = glm::translate(model, glm::vec3(x, y, x));
-		model = glm::scale(model, glm::vec3(0.2f));
-		shaderManeger.SetMat4(shaderProgramLamp, "modelLamp", model);
+		//model = glm::mat4(1.0f);
+		//model = glm::translate(model, lightPos);
+		////model = glm::translate(model, glm::vec3(x, y, x));
+		//model = glm::scale(model, glm::vec3(0.2f));
+		//shaderManeger.SetMat4(shaderProgramLamp, "modelLamp", model);
 
-		vertexArrayLightObject.Bind();
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		//vertexArrayLightObject.Bind();
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
