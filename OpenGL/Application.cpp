@@ -284,7 +284,7 @@ int main(int argc, char* argv[])
 	ShaderSources shaderSourcesLamp = shaderManeger.ParseShaders(filePathLamp);
 	unsigned int shaderProgramLamp = shaderManeger.CreateShader(shaderSourcesLamp.vertexSource, shaderSourcesLamp.fragmentSource);
 
-	//Wall Brick Texture
+	//Wall Brick Textures
 	Texture cube;
 	std::string imagePath = "res/textures/container2.png";
 	cube.TextureFlipVertically();
