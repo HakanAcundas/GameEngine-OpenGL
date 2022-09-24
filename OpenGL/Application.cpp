@@ -14,7 +14,7 @@
 #define WIDTH 860
 #define HEIGHT 640
 
-
+//need for ImGui initilization
 const char* glsl_version = "#version 130";
 
 //Camera
@@ -305,6 +305,7 @@ int main(int argc, char* argv[])
 	shaderManeger.SetInt(shaderProgramCube, "material.diffuse", 0);
 	shaderManeger.SetInt(shaderProgramCube, "material.specular", 1);
 
+	//ImGui initilizers
 	ImGui::CreateContext();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
@@ -334,6 +335,7 @@ int main(int argc, char* argv[])
 		float y = glm::sin((float)glfwGetTime());
 		lightPos = glm::vec3(x, y, x);*/
 
+		//ImGui Part START
 		{
 			static float f = 0.0f;
 			static int counter = 0;
@@ -355,6 +357,8 @@ int main(int argc, char* argv[])
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
+		//ImGui Part END
+
 
 		//Render Cube Uniforms
 		shaderManeger.Use(shaderProgramCube);
