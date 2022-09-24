@@ -160,6 +160,14 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="res\shaders\ShadersManeger.cpp" />
     <ClCompile Include="res\vendor\glm\detail\glm.cpp" />
+    <ClCompile Include="res\vendor\imgui\imgui.cpp" />
+    <ClCompile Include="res\vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="res\vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="res\vendor\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="res\vendor\imgui\imgui_impl_opengl2.cpp" />
+    <ClCompile Include="res\vendor\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="res\vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="res\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="res\vendor\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -599,6 +607,16 @@
     <ClInclude Include="res\vendor\glm\vec3.hpp" />
     <ClInclude Include="res\vendor\glm\vec4.hpp" />
     <ClInclude Include="res\vendor\glm\vector_relational.hpp" />
+    <ClInclude Include="res\vendor\imgui\imconfig.h" />
+    <ClInclude Include="res\vendor\imgui\imgui.h" />
+    <ClInclude Include="res\vendor\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="res\vendor\imgui\imgui_impl_opengl2.h" />
+    <ClInclude Include="res\vendor\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="res\vendor\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="res\vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="res\vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="res\vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="res\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="res\vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>

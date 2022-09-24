@@ -6,10 +6,16 @@
 #include "res/vendor/stb_image/stb_image.h"
 #include "API/Texture.h"
 #include "API/Camera.h"
+#include "res/vendor/imgui/imgui.h"
+#include "res/vendor/imgui/imgui_impl_glfw.h"
+#include "res/vendor/imgui/imgui_impl_opengl3.h"
+#include <stdio.h>
 
 #define WIDTH 860
 #define HEIGHT 640
 
+
+const char* glsl_version = "#version 130";
 
 //Camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -299,11 +305,24 @@ int main(int argc, char* argv[])
 	shaderManeger.SetInt(shaderProgramCube, "material.diffuse", 0);
 	shaderManeger.SetInt(shaderProgramCube, "material.specular", 1);
 
+	ImGui::CreateContext();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init(glsl_version);
+	ImGui::StyleColorsDark();
+
+	bool show_demo_window = true;
+	bool show_another_window = false;
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 
 		processInput(window);
 
@@ -314,6 +333,28 @@ int main(int argc, char* argv[])
 		/*float x = glm::cos((float)glfwGetTime());
 		float y = glm::sin((float)glfwGetTime());
 		lightPos = glm::vec3(x, y, x);*/
+
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+			ImGui::Checkbox("Another Window", &show_another_window);
+
+			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::End();
+		}
 
 		//Render Cube Uniforms
 		shaderManeger.Use(shaderProgramCube);
@@ -379,6 +420,8 @@ int main(int argc, char* argv[])
 		vertexArrayLightObject.Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 36);*/
 
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -388,6 +431,9 @@ int main(int argc, char* argv[])
 	//glDeleteBuffers(1, &elementBuffer);
 	cube.~Texture();
 	textureSpecular.~Texture();
+	
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
 	glfwTerminate();
 	return 0;
 }
