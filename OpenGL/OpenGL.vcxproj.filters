@@ -486,6 +486,7 @@
     <None Include="res\shaders\lamp.shader" />
     <None Include="res\shaders\pointLight.shader" />
     <None Include="res\shaders\directional.shader" />
+    <None Include="res\shaders\multipleLights.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="API\VertexBuffer.h">

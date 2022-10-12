@@ -263,9 +263,6 @@ int main(int argc, char* argv[])
 			ImGui::Text("BACKGROUND SETTINGS");
 			//ImGui::SliderFloat("Transperancy: ", &backGroundColorRed, backGroundColorGreen, backGroundColorBlue); // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::ColorEdit3("Background color", (float*)&backGroundColor); // Edit 3 floats representing a color
-			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-			ImGui::Checkbox("Another Window", &show_another_window);
-
 
 			if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
 				counter++;
