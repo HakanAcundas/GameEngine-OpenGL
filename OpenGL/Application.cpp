@@ -22,6 +22,7 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = WIDTH / 2.0f;
 float lastY = HEIGHT / 2.0f;
 bool firstMouse = true;
+bool isCursorCameraMovement = true;
 
 //Timer normalizers
 float deltaTime = 0.0f;	// Time between current frame and last frame
@@ -47,6 +48,19 @@ void processInput(GLFWwindow* window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	{
+		if (isCursorCameraMovement == true)
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			isCursorCameraMovement = false;
+		}
+		else
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			isCursorCameraMovement = true;
+		}
+	}
 }
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
@@ -87,7 +101,8 @@ int main(int argc, char* argv[])
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, windowName, NULL, NULL);
 	glfwMakeContextCurrent(window);
 
-	glfwSetCursorPosCallback(window, mouse_callback);
+	if(isCursorCameraMovement == true)
+		glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
 	// tell GLFW to capture our mouse
@@ -313,7 +328,7 @@ int main(int argc, char* argv[])
 
 	bool show_demo_window = true;
 	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	ImVec4 backGroundColor = ImVec4(0.1f, 0.1f, 0.1f, 1.00f);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -325,31 +340,20 @@ int main(int argc, char* argv[])
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		processInput(window);
-
-		//resizeWindow();
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		/*float x = glm::cos((float)glfwGetTime());
-		float y = glm::sin((float)glfwGetTime());
-		lightPos = glm::vec3(x, y, x);*/
-
 		//ImGui Part START
 		{
-			static float f = 0.0f;
 			static int counter = 0;
 
-			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+			ImGui::Begin("Flat Engine"); // Create a window called "Flat Engine" and append into it.
 
-			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+			ImGui::Text("BACKGROUND SETTINGS");
+			//ImGui::SliderFloat("Transperancy: ", &backGroundColorRed, backGroundColorGreen, backGroundColorBlue); // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::ColorEdit3("Background color", (float*)&backGroundColor); // Edit 3 floats representing a color
 			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
 			ImGui::Checkbox("Another Window", &show_another_window);
 
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+			if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
 				counter++;
 			ImGui::SameLine();
 			ImGui::Text("counter = %d", counter);
@@ -359,6 +363,15 @@ int main(int argc, char* argv[])
 		}
 		//ImGui Part END
 
+		processInput(window);
+
+		//resizeWindow();
+		glClearColor(backGroundColor.x, backGroundColor.y, backGroundColor.z, backGroundColor.w);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		/*float x = glm::cos((float)glfwGetTime());
+		float y = glm::sin((float)glfwGetTime());
+		lightPos = glm::vec3(x, y, x);*/
 
 		//Render Cube Uniforms
 		shaderManeger.Use(shaderProgramCube);
