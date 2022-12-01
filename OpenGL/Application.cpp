@@ -11,8 +11,8 @@
 #include "res/vendor/imgui/imgui_impl_opengl3.h"
 #include <stdio.h>
 
-#define WIDTH 860
-#define HEIGHT 640
+#define WIDTH 1920
+#define HEIGHT 1080
 
 //need for ImGui initilization
 const char* glsl_version = "#version 130";
@@ -30,64 +30,13 @@ float lastFrame = 0.0f; // Time of last frame
 
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
-void resizeWindow(int x, int y, int width = HEIGHT, int height = HEIGHT)
-{
-	glViewport(x, y, width, height);
-}
+void resizeWindow(int x, int y, int width = HEIGHT, int height = HEIGHT);
 
-void processInput(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
+void processInput(GLFWwindow* window);
 
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-	{
-		if (isCursorCameraMovement == true)
-		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			isCursorCameraMovement = false;
-		}
-		else
-		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			isCursorCameraMovement = true;
-		}
-	}
-}
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
-{
-	float xpos = static_cast<float>(xposIn);
-	float ypos = static_cast<float>(yposIn);
-
-	if (firstMouse)
-	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
-	}
-
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-	lastX = xpos;
-	lastY = ypos;
-
-	camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	camera.ProcessMouseScroll(static_cast<float>(yoffset));
-}
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 int main(int argc, char* argv[])
 {
@@ -98,11 +47,9 @@ int main(int argc, char* argv[])
 	
 
 	char windowName[] = "Portal";
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, windowName, NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, windowName, glfwGetPrimaryMonitor(), NULL);
 	glfwMakeContextCurrent(window);
-
-	if(isCursorCameraMovement == true)
-		glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
 	// tell GLFW to capture our mouse
@@ -264,7 +211,7 @@ int main(int argc, char* argv[])
 			static int counter = 0;
 
 			ImGui::Begin("Flat Engine"); // Create a window called "Flat Engine" and append into it.
-
+			   
 			ImGui::Text("BACKGROUND SETTINGS");
 			//ImGui::SliderFloat("Transperancy: ", &backGroundColorRed, backGroundColorGreen, backGroundColorBlue); // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::ColorEdit3("Background color", (float*)&backGroundColor); // Edit 3 floats representing a color
@@ -443,6 +390,69 @@ void windowInitTest(GLFWwindow* window)
 	{
 		std::cout << "Window initialized successfully!!!";
 	}
+}
+
+void resizeWindow(int x, int y, int width, int height)
+{
+	glViewport(x, y, width, height);
+}
+
+void processInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	{
+		//Disable camera movement with mouse
+		if (isCursorCameraMovement == true)
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			isCursorCameraMovement = false;
+		}
+		//Anable camera movement with mouse
+		else
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			isCursorCameraMovement = true;
+			firstMouse = true;
+		}
+	}
+}
+
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn )
+{
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = xpos;
+	lastY = ypos;
+
+	if(isCursorCameraMovement)
+		camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
 unsigned int loadTexture(char const* path)
