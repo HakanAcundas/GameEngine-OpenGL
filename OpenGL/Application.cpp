@@ -10,9 +10,12 @@
 #include "res/vendor/imgui/imgui_impl_glfw.h"
 #include "res/vendor/imgui/imgui_impl_opengl3.h"
 #include <stdio.h>
+#include <chrono>
+#include <thread>
 
-#define WIDTH 1920
-#define HEIGHT 1080
+
+#define WIDTH 1366
+#define HEIGHT 920
 
 //need for ImGui initilization
 const char* glsl_version = "#version 130";
@@ -23,6 +26,10 @@ float lastX = WIDTH / 2.0f;
 float lastY = HEIGHT / 2.0f;
 bool firstMouse = true;
 bool isCursorCameraMovement = true;
+
+//Rotation and angle of boxes
+bool rotation = false;
+float angle = 20.0f;
 
 //Timer normalizers
 float deltaTime = 0.0f;	// Time between current frame and last frame
@@ -47,7 +54,7 @@ int main(int argc, char* argv[])
 	
 
 	char windowName[] = "Portal";
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, windowName, glfwGetPrimaryMonitor(), NULL);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, windowName, NULL, NULL);
 	glfwMakeContextCurrent(window);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
@@ -196,6 +203,7 @@ int main(int argc, char* argv[])
 
 	ImVec4 backGroundColor = ImVec4(0.1f, 0.1f, 0.1f, 1.00f);
 
+	//Engine Loop
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
@@ -206,7 +214,7 @@ int main(int argc, char* argv[])
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		//ImGui Part START
+		//ImGui START
 		{
 			static int counter = 0;
 
@@ -215,16 +223,16 @@ int main(int argc, char* argv[])
 			ImGui::Text("BACKGROUND SETTINGS");
 			//ImGui::SliderFloat("Transperancy: ", &backGroundColorRed, backGroundColorGreen, backGroundColorBlue); // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::ColorEdit3("Background color", (float*)&backGroundColor); // Edit 3 floats representing a color
-
-			if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
-				counter++;
+			ImGui::Checkbox("Rotation", &rotation);
+			//if (rotation) // Buttons return true when clicked (most widgets return true when edited/activated)
+				
 			ImGui::SameLine();
 			ImGui::Text("counter = %d", counter);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
-		//ImGui Part END
+		//ImGui END
 
 		processInput(window);
 
@@ -244,7 +252,7 @@ int main(int argc, char* argv[])
 		  by defining light types as classes and set their values in there, or by using a more efficient uniform approach
 		  by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
 	   */
-	   // directional light
+	    // directional light
 		shaderManeger.SetVec3(shaderProgramCube, "dirLight.direction", -0.2f, -1.0f, -0.3f);
 		shaderManeger.SetVec3(shaderProgramCube, "dirLight.ambient", 0.05f, 0.05f, 0.05f);
 		shaderManeger.SetVec3(shaderProgramCube, "dirLight.diffuse", 0.4f, 0.4f, 0.4f);
@@ -312,11 +320,16 @@ int main(int argc, char* argv[])
 		textureSpecular.Bind();
 
 		vertexArrayObject.Bind();
+		
 		for (unsigned int i = 0; i < 10; i++)
 		{
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, cubePositions[i]);
-			float angle = 20.0f * i;
+			if (rotation)
+			{
+				angle = 20.0f * (float)glfwGetTime();
+			}
+			
 			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			shaderManeger.SetMat4(shaderProgramCube, "model", model);
 
