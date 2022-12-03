@@ -218,7 +218,7 @@ int main(int argc, char* argv[])
 		{
 			static int counter = 0;
 
-			ImGui::Begin("Flat Engine"); // Create a window called "Flat Engine" and append into it.
+			ImGui::Begin("Flat Engine"); // Create a window called "Flat Engine" and append into it
 			   
 			ImGui::Text("BACKGROUND SETTINGS");
 			//ImGui::SliderFloat("Transperancy: ", &backGroundColorRed, backGroundColorGreen, backGroundColorBlue); // Edit 1 float using a slider from 0.0f to 1.0f
